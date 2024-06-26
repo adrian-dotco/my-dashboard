@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Layout from '@/components/Layout';
 
-export default function Home() {
+export default function Profile() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -25,8 +25,9 @@ export default function Home() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-5">Welcome to your Dashboard, {session.user?.name}!</h1>
-      {/* We'll add more content here in the next steps */}
+      <h1 className="text-2xl font-bold mb-5">User Profile</h1>
+      <p>Username: {session.user?.name}</p>
+      {/* Add more profile information here */}
     </Layout>
   );
 }
