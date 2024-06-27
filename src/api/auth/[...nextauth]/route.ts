@@ -10,7 +10,6 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // This is where you'd usually check against a database
         if (credentials?.username === 'admin' && credentials?.password === 'password') {
           return { id: '1', name: 'Admin' };
         }
@@ -20,7 +19,12 @@ const handler = NextAuth({
   ],
   pages: {
     signIn: '/login',
-  }
+  },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
+  },
 });
 
 export { handler as GET, handler as POST };
