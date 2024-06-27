@@ -1,5 +1,6 @@
-import NextAuth, { DefaultSession } from 'next-auth';
+import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { JWT } from 'next-auth/jwt';
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -10,12 +11,19 @@ declare module "next-auth" {
   }
 }
 
+// Extend the built-in JWT types
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+  }
+}
+
 interface User {
   id: string;
   name: string;
 }
 
-const handler = NextAuth({
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -48,12 +56,14 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (session.user && token) {
-        session.user.id = token.id as string;
+      if (session.user) {
+        session.user.id = token.id;
       }
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
