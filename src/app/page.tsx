@@ -1,32 +1,10 @@
-'use client';
-
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import Layout from '@/components/Layout';
+import { Providers } from '@/components/Providers'
+import Dashboard from '@/components/Dashboard'
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login');
-    }
-  }, [status, router]);
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (!session) {
-    return null;
-  }
-
   return (
-    <Layout>
-      <h1 className="text-2xl font-bold mb-5">Welcome to your Dashboard, {session.user?.name}!</h1>
-      {/* We'll add more content here in the next steps */}
-    </Layout>
-  );
+    <Providers>
+      <Dashboard />
+    </Providers>
+  )
 }
