@@ -1,27 +1,37 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const error = searchParams.get('error')
+    if (error) {
+      setError('An error occurred. Please try again.')
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+
     const result = await signIn('credentials', {
       username,
       password,
       redirect: false,
     })
 
-    if (result?.ok) {
+    if (result?.error) {
+      setError('Invalid username or password')
+    } else if (result?.ok) {
       router.push('/')
-    } else {
-      // Handle error
-      console.error('Login failed')
     }
   }
 
@@ -33,6 +43,11 @@ export default function Login() {
             Sign in to your account
           </h2>
         </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
@@ -79,5 +94,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  );
+  )
 }
