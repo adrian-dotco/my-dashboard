@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     const result = await signIn('credentials', {
       username,
       password,
       redirect: false,
-    });
+    })
 
     if (result?.ok) {
-      router.push('/');
+      router.push('/')
     } else {
       // Handle error
-      console.error('Login failed');
+      console.error('Login failed')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
