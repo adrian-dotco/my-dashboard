@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { JWT } from 'next-auth/jwt';
+import { JWT } from 'next-auth/jvt';
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -12,7 +12,7 @@ declare module "next-auth" {
 }
 
 // Extend the built-in JWT types
-declare module "next-auth/jwt" {
+declare module "next-auth/jvt" {
   interface JWT {
     id: string;
   }
@@ -31,7 +31,7 @@ const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials): Promise<User | null> {
+      async authorize(credentials): Promise<User | null> => {
         if (credentials?.username === 'admin' && credentials?.password === 'password') {
           return { id: '1', name: 'Admin' };
         }
@@ -44,7 +44,7 @@ const authOptions: NextAuthOptions = {
     error: '/login',
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
+    async redirect({url, baseUrl}) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
