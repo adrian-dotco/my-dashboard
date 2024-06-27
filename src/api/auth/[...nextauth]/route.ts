@@ -49,7 +49,7 @@ const authOptions: NextAuthOptions = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    async jwt({ token, user }) {
+    async jvt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
