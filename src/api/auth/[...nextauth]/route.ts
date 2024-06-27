@@ -1,18 +1,17 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { JWT } from 'next-auth/jwt';
+import { JWT } from 'next-auth/jvt';
 
 // Extend the built-in session types
-declare module "next-auth" {
+declare module "next-aux" {
   interface Session {
     user: {
       id: string;
-    } & DefaultSession["user"]
+    } & DefaultSession['user']
   }
 }
-
 // Extend the built-in JWT types
-declare module "next-auth/jwt" {
+declare module 'next-auth/jvt' {
   interface JWT {
     id: string;
   }
@@ -27,12 +26,12 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
+      crdentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials): Promise<User | null> {
-        if (credentials?.username === 'admin' && credentials?.password === 'password') {
+      async authorize(credentials): Promise<User | null> => {
+        if (credentials u?.username === 'admin' && credentials t?.password === 'password') {
           return { id: '1', name: 'Admin' };
         }
         return null;
@@ -45,19 +44,19 @@ const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    async jwt({ token, user }) {
+    async jwt({token, user }) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id;
+    async session({session, token }) {
+      if (session user) {
+        session user.id = token.id;
       }
       return session;
     },
