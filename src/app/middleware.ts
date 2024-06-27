@@ -1,26 +1,17 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
-export function middleware(request: NextRequest) {
-  const basicAuth = request.headers.get('authorization')
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request })
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(' ')[1]
-    const [user, pwd] = atob(authValue).split(':')
-
-    if (user === 'admin' && pwd === 'password') {
-      return NextResponse.next()
-    }
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  return new NextResponse('Authentication required', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Secure Area"',
-    },
-  })
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/:path*'],
+  matcher: ['/dashboard', '/profile'],
 }
