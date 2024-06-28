@@ -2,7 +2,7 @@ import React from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md">
